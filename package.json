@@ -1,0 +1,46 @@
+{
+  "name": "control_center",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "react": "16.8.6",
+    "react-native": "0.60.4",
+    "react-native-navigation": "^2.26.2",
+    "react-native-vector-icons": "^6.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/runtime": "^7.5.5",
+    "@react-native-community/eslint-config": "^0.0.5",
+    "@types/jest": "^24.0.16",
+    "@types/react": "^16.8.23",
+    "@types/react-native": "^0.60.2",
+    "@types/react-test-renderer": "^16.8.3",
+    "babel-jest": "^24.8.0",
+    "babel-plugin-module-resolver": "^3.2.0",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-plugin-jest": "^22.14.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "jest": "^24.8.0",
+    "metro-react-native-babel-preset": "^0.55.0",
+    "react-native-typescript-transformer": "^1.2.12",
+    "react-test-renderer": "16.8.6",
+    "tslib": "^1.10.0",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-etc": "^1.6.0",
+    "tslint-react": "^4.0.0",
+    "tslint-react-hooks": "^2.2.1",
+    "tsutils": "^3.14.0",
+    "typescript": "^3.5.3"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}

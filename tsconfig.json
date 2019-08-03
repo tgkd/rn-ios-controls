@@ -1,0 +1,53 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "baseUrl": ".",
+        "moduleResolution": "node",
+        "target": "es5",
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "sourceMap": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "strict": true,
+        "importHelpers": true,
+        "strictNullChecks": true,
+        "keyofStringsOnly": true, // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#typescript-29
+        "strictPropertyInitialization": false,
+        "lib": [
+            "dom",
+            "es6",
+            "es2017.object"
+        ],
+        "module": "esnext",
+        "resolveJsonModule": true,
+        "paths": {
+            "src/*": [
+                "./src/*"
+            ],
+            "components/*": [
+                "./src/components/*"
+            ],
+            "screens/*": [
+                "./src/screens/*"
+            ],
+            "navigation": [
+                "./src/navigation/index.ts"
+            ],
+            "styles": [
+                "./src/styles/index.ts"
+            ],
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "babel.config.js",
+        "metro.config.js",
+        "jest.config.js"
+    ]
+}

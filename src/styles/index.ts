@@ -1,0 +1,16 @@
+export const colors = {
+    green: '#4CD964',
+    grayTintColor: '#04040F',
+    midGray: '#C7C7CC',
+    blue: '#007AFF',
+    purple: '#5856D6',
+    red: '#FF3B30',
+    white: '#FFF',
+    opacityBackground: 'rgba(0, 0, 0, 0.45)',
+    pageBackground: '#dbdbdb',
+    orange: '#FF9500',
+    buttonBackground: '#8A8A8A',
+    lightGray: '#EFEFF4',
+    buttonDisabled: 'rgba(0, 0, 0, 0.25)',
+    whiteOpacity: 'rgba(255, 255, 255, 0.45)',
+};
