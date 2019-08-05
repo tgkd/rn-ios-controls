@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, StatusBar } from 'react-native';
-import { Navigation, ComponentEvent } from 'react-native-navigation';
+import { Navigation } from 'react-native-navigation';
 
 import { VerticalSlider } from 'components/Slider';
 import { LockButton } from 'components/LockButton';
@@ -8,22 +8,26 @@ import { NightModeButton } from 'components/NightModeButton';
 import { NetworkPreview } from 'components/NetworkPreview';
 import { PlayerPreview } from 'components/PlayerPreview';
 import { ScreenMirroringButton } from 'components/ScreenMirroringButton';
-import { ToggleButton } from 'components/ToggleButton';
+import { IControlCenterProps } from '../../screens/ControlCenter';
 
 import { Screens } from 'navigation';
 import { colors } from 'styles';
 
 StatusBar.setHidden(true);
 
-interface IProps extends ComponentEvent {}
-
-export default class ControlCenter extends React.Component<IProps> {
+export default class ControlCenter extends React.Component<IControlCenterProps> {
     public render() {
+        const { buttonsState, setButtonState } = this.props;
+
         return (
             <View style={styles.container}>
                 <View style={styles.row}>
                     <View style={styles.col}>
-                        <NetworkPreview pressHandler={this.goTo} />
+                        <NetworkPreview
+                            setButtonState={setButtonState}
+                            buttonsState={buttonsState}
+                            redirect={this.goTo}
+                        />
                     </View>
                     <View style={styles.col}>
                         <PlayerPreview pressHandler={this.goTo} />
@@ -79,11 +83,11 @@ export default class ControlCenter extends React.Component<IProps> {
                                 fromId: `${routeName}_1`,
                                 toId: `${routeName}_2`,
                                 springVelocity: 0.2,
-                                duration: 0.2,
+                                duration: 0.3,
                                 startDelay: 0,
                             },
                         ],
-                        duration: 0.2,
+                        duration: 0.3,
                     },
                 },
             },

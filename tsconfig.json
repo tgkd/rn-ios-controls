@@ -42,6 +42,9 @@
             "styles": [
                 "./src/styles/index.ts"
             ],
+            "helpers": [
+                "./src/helpers/index.ts"
+            ],
         }
     },
     "exclude": [

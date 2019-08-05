@@ -16,6 +16,7 @@ import { PlayerButtons } from 'components/PlayerButtons';
 
 import { Screens } from 'navigation';
 import { colors } from 'styles';
+import { isIphoneX } from 'helpers';
 
 interface IProps extends ComponentEvent {}
 
@@ -86,12 +87,22 @@ export default function Player(props: IProps) {
     );
 }
 
-const { height, width } = Dimensions.get('window');
+const dim = Dimensions.get('window');
+
+const height = isIphoneX() ? dim.height - 420 : dim.height - 240;
+const width = dim.width - 40;
+const borderRadius = Math.round((height + width) / 14);
 
 const styles = StyleSheet.create({
+    resultBlock: {
+        height,
+        width,
+        borderRadius,
+        backgroundColor: colors.opacityBackground,
+    },
     container: {
         flex: 1,
-        width,
+        width: '100%',
         height,
         justifyContent: 'center',
         alignItems: 'center',
@@ -147,13 +158,5 @@ const styles = StyleSheet.create({
     slider: {
         flex: 1,
         marginHorizontal: 20,
-    },
-
-    resultBlock: {
-        top: 10,
-        height: '80%',
-        width: width - 40,
-        borderRadius: 40,
-        backgroundColor: colors.opacityBackground,
     },
 });

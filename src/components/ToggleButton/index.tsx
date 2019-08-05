@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
     StyleSheet,
     Easing,
@@ -22,78 +22,89 @@ export interface IToggleProps {
         defaultColor: string;
     };
     rounded?: boolean;
-    pressHandler: () => void;
+    pressHandler: (name: string) => void;
     styles?: StyleProp<any>;
+    isActive: boolean;
 }
 
-export const ToggleButton = ({
-    pressHandler,
-    icon,
-    background = { defaultColor: colors.opacityBackground, activeColor: colors.white },
-    rounded,
-    ...props
-}: IToggleProps) => {
-    const [active, setActive] = useState(false);
-    const animatedScale = useRef(new Animated.Value(1)).current;
-    const animatedColor = useRef(new Animated.Value(0)).current;
-    const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+export class ToggleButton extends React.Component<IToggleProps> {
+    private animatedColor: any;
 
-    const animateScale = (toValue: number, callback?: () => void) => {
-        Animated.timing(animatedScale, {
+    private readonly animatedScale = new Animated.Value(1);
+
+    public render() {
+        const {
+            icon,
+            background = {
+                defaultColor: colors.opacityBackground,
+                activeColor: colors.white,
+            },
+            rounded,
+            ...props
+        } = this.props;
+        this.animatedColor = new Animated.Value(Number(this.props.isActive));
+        const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+
+        return (
+            <TouchableWithoutFeedback onPress={this.onPress}>
+                <Animated.View
+                    style={[
+                        styles.default,
+                        rounded && styles.rounded,
+                        props.styles,
+                        {
+                            backgroundColor: this.animatedColor.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [
+                                    background.defaultColor,
+                                    background.activeColor,
+                                ],
+                            }),
+                            transform: [{ scale: this.animatedScale }],
+                        },
+                    ]}
+                >
+                    <AnimatedIcon
+                        name={icon.name}
+                        size={icon.size || 24}
+                        style={{
+                            color: this.animatedColor.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [icon.defaultColor, icon.activeColor],
+                            }),
+                        }}
+                    />
+                </Animated.View>
+            </TouchableWithoutFeedback>
+        );
+    }
+
+    private readonly animateScale = (toValue: number, callback?: () => void) => {
+        Animated.timing(this.animatedScale, {
             toValue,
             duration: 100,
         }).start(callback);
     };
 
-    const onPress = () => {
-        setActive(!active);
-        Animated.timing(animatedColor, {
-            duration: rounded ? 150 : 50,
-            toValue: Number(!active),
+    private readonly onPress = () => {
+        const { rounded, pressHandler } = this.props;
+
+        Animated.timing(this.animatedColor, {
+            duration: this.props.rounded ? 150 : 50,
+            toValue: Number(!this.props.isActive),
             easing: Easing.ease,
         }).start(() => {
             if (rounded) {
-                pressHandler();
+                pressHandler(this.props.icon.name);
                 return;
             }
-            animateScale(0.95, () => {
-                pressHandler();
-                animateScale(1, () => {});
+            this.animateScale(0.95, () => {
+                pressHandler(this.props.icon.name);
+                this.animateScale(1, () => {});
             });
         });
     };
-
-    const backgroundColor = animatedColor.interpolate({
-        inputRange: [0, 1],
-        outputRange: [background.defaultColor, background.activeColor],
-    });
-    const iconColor = animatedColor.interpolate({
-        inputRange: [0, 1],
-        outputRange: [icon.defaultColor, icon.activeColor],
-    });
-
-    return (
-        <TouchableWithoutFeedback onPress={onPress}>
-            <Animated.View
-                style={[
-                    styles.default,
-                    rounded && styles.rounded,
-                    props.styles,
-                    {
-                        backgroundColor: backgroundColor,
-                        transform: [{ scale: animatedScale }],
-                    },
-                ]}
-            >
-                <AnimatedIcon
-                    name={icon.name}
-                    size={icon.size || 24}
-                    style={{ color: iconColor }}
-                />
-            </Animated.View>
-        </TouchableWithoutFeedback>
-    );
-};
+}
 
 const styles = StyleSheet.create({
     default: {

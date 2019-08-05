@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         height: 125,
         width: 125,
-        borderRadius: 18,
+        borderRadius: Math.round(125 + 125) / 14,
     },
     contentContainer: {
         padding: 6,

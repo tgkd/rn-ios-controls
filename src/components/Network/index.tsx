@@ -1,20 +1,13 @@
-import React, { useState, useRef } from 'react';
-import {
-    Animated,
-    View,
-    TouchableOpacity,
-    StyleSheet,
-    Dimensions,
-    Text,
-} from 'react-native';
-import { Navigation, ComponentEvent } from 'react-native-navigation';
+import React from 'react';
+import { Animated, TouchableOpacity, StyleSheet, Text, Dimensions } from 'react-native';
+import { Navigation } from 'react-native-navigation';
 
 import { ToggleButton } from 'components/ToggleButton';
 
 import { Screens } from 'navigation';
 import { colors } from 'styles';
-
-interface IProps extends ComponentEvent {}
+import { INetworkProps } from 'screens/Network';
+import { isIphoneX } from 'helpers';
 
 export const BUTTONS = [
     {
@@ -66,7 +59,7 @@ export const BUTTONS = [
         },
     },
     {
-        name: 'ios-',
+        name: 'ios-radio',
         label: 'AirDrop',
         icon: {
             defaultColor: colors.opacityBackground,
@@ -91,81 +84,93 @@ export const BUTTONS = [
     },
 ];
 
-export default function Network(props: IProps) {
-    const initState: { [key: string]: boolean } = BUTTONS.reduce(
-        (acc, curr) => ({ ...acc, [curr.name]: false }),
-        {}
-    );
-    const [buttonsState, setButtonsState] = useState(initState);
-    const animatedOpacity = useRef(new Animated.Value(1)).current;
+export default class Network extends React.Component<INetworkProps> {
+    private animatedOpacity = new Animated.Value(1);
 
-    const animate = (toValue: number, callback?: () => void, duration = 50) => {
-        Animated.timing(animatedOpacity, {
+    public render() {
+        const { buttonsState } = this.props;
+
+        return (
+            <TouchableOpacity
+                activeOpacity={1}
+                style={styles.container}
+                onPress={this.goBack}
+            >
+                <Navigation.Element elementId={`${Screens.network}_2`}>
+                    <TouchableOpacity activeOpacity={1} style={styles.resultBlock}>
+                        {BUTTONS.map(b => (
+                            <Animated.View
+                                style={[
+                                    styles.btnContainer,
+                                    { opacity: this.animatedOpacity },
+                                ]}
+                                key={b.name}
+                            >
+                                <ToggleButton
+                                    pressHandler={this.props.setButtonState}
+                                    rounded
+                                    icon={{
+                                        ...b.icon,
+                                        name: b.name,
+                                        size: 24,
+                                    }}
+                                    background={b.background}
+                                    styles={{ height: 50, width: 50, borderRadius: 25 }}
+                                    isActive={buttonsState[b.name]}
+                                />
+                                <Text style={styles.btnLabel}>{b.label}</Text>
+                                <Text style={styles.labelVal}>
+                                    {buttonsState[b.name] ? 'On' : 'Off'}
+                                </Text>
+                            </Animated.View>
+                        ))}
+                    </TouchableOpacity>
+                </Navigation.Element>
+            </TouchableOpacity>
+        );
+    }
+
+    private readonly animate = (
+        toValue: number,
+        callback?: () => void,
+        duration = 50
+    ) => {
+        Animated.timing(this.animatedOpacity, {
             toValue,
             duration,
             useNativeDriver: true,
         }).start(callback);
     };
 
-    const goBack = () => {
-        animate(0, () => {
-            animate(1, () => {}, 50);
-            Navigation.pop(props.componentId);
+    private readonly goBack = () => {
+        this.animate(0, () => {
+            Navigation.pop(this.props.componentId);
+            this.animate(1, () => {}, 50);
         });
     };
-
-    const buttonPressHandler = (name: string) => {
-        setButtonsState({ ...buttonsState, [name]: !buttonsState[name] });
-    };
-
-    return (
-        <TouchableOpacity activeOpacity={1} style={styles.container} onPress={goBack}>
-            <Navigation.Element elementId={`${Screens.network}_2`}>
-                <TouchableOpacity activeOpacity={1} style={styles.resultBlock}>
-                    {BUTTONS.map(b => (
-                        <Animated.View
-                            style={[styles.btnContainer, { opacity: animatedOpacity }]}
-                            key={b.name}
-                        >
-                            <ToggleButton
-                                pressHandler={buttonPressHandler.bind(null, b.name)}
-                                rounded
-                                icon={{
-                                    ...b.icon,
-                                    name: b.name,
-                                    size: 24,
-                                }}
-                                background={b.background}
-                                styles={{ height: 50, width: 50, borderRadius: 25 }}
-                            />
-                            <Text style={styles.btnLabel}>{b.label}</Text>
-                            <Text style={styles.labelVal}>
-                                {buttonsState[b.name] ? 'On' : 'Off'}
-                            </Text>
-                        </Animated.View>
-                    ))}
-                </TouchableOpacity>
-            </Navigation.Element>
-        </TouchableOpacity>
-    );
 }
 
-const { height, width } = Dimensions.get('window');
+const dim = Dimensions.get('window');
+
+const height = isIphoneX() ? dim.height - 420 : dim.height - 240;
+const width = dim.width - 40;
+const borderRadius = Math.round((height + width) / 14);
 
 const styles = StyleSheet.create({
     container: {
-        width,
-        height,
+        width: dim.width,
+        height: dim.height,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: colors.pageBackground,
     },
 
     resultBlock: {
-        height: '80%',
-        width: width - 40,
-        borderRadius: 40,
+        height,
+        width,
+        borderRadius,
         backgroundColor: colors.opacityBackground,
+        paddingVertical: 10,
         flexDirection: 'row',
         flexWrap: 'wrap',
     },

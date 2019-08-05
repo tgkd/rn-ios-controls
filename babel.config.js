@@ -10,6 +10,7 @@ module.exports = {
                     screens: './src/screens',
                     navigation: './src/navigation/index.ts',
                     styles: './src/styles/index.ts',
+                    helpers: './src/helpers/index.ts',
                 },
             },
         ],
